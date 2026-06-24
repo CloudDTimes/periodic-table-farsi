@@ -1,11 +1,127 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import farsiTableDataJson from "../data/prs.json";
+import tableDataJson from "../data/periodic-elements.json";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+type ElementData = {
+	name: string;
+	number: number;
+	symbol: string;
+	atomic_mass: number;
+	phase: string;
+};
+type FarsiElementData = {
+	name: string;
+	summary: string;
+};
+type EnglishElemntData = {
+	elements: ElementData[];
+};
+type farsiTableData = Record<string, FarsiElementData>;
+const farsiPeriodicData: farsiTableData = farsiTableDataJson;
+const periodicData: EnglishElemntData = tableDataJson;
+
+const PhaseColor: Record<
+	string,
+	{ name: string; border: string; bg: string; text: string }
+> = {
+	Gas: {
+		name: "گاز",
+		border: "border-emerald-500",
+		bg: "bg-emerald-950",
+		text: "text-emerald-500",
+	},
+	Solid: {
+		name: "جامد",
+
+		border: "border-red-500",
+		bg: "bg-red-950",
+		text: "text-red-500",
+	},
+	Liquid: {
+		name: "مایع",
+
+		border: "border-sky-500",
+		bg: "bg-sky-900",
+		text: "text-sky-500",
+	},
+	Default: {
+		name: "نامشخص",
+
+		border: "border-border",
+		bg: "bg-surface",
+		text: "text-foreground", // Fixed your fallback from "bg-surface" to text style
+	},
+};
 ---
 
 <Layout>
-	<Welcome />
+	<header
+		class='sticky top-0 z-50 flex items-center justify-between w-full h-16  bg-surface'>
+		<section class=' w-full flex  gap-4 px-2 py-2'>
+			{
+				Object.entries(PhaseColor).filter(([key]) => key !== "Default" ).map(([_, value]) => (
+					<span
+						class={`w-full h-12 ${value.bg} ${value.text} ${value.border} border rounded-xl text-sm flex justify-center items-center`}>
+						{value.name}
+					</span>
+				))
+			}
+		</section>
+		<section class="h-full  px-4 py-2">
+			<div class="w-full h-full flex justify-center items-center bg-primary aspect-square text-background rounded-lg">
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16"><!-- Icon from Charm Icons by Jay Newey - https://github.com/jaynewey/charm-icons/blob/main/LICENSE --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg>
+			</div>
+		</section>
+
+	</header>
+	<main class='flex flex-col w-full min-h-screen'>
+		<article class='flex flex-col'>
+			<section>
+		<h1 class='font-bold text-foreground'>جدول تناوبی</h1>
+	</section>
+			<section
+				dir='ltr'
+				class='grid grid-cols-2 gap-4 p-4 md:grid-cols-4'>
+				{
+					Object.entries(farsiPeriodicData).map(([key, value]) => {
+						const atomicNumber = Number(key);
+						const englishElement = periodicData.elements.find(
+							(el) => el.number === atomicNumber,
+						);
+						const phase = englishElement?.phase || "Default";
+						const currentStyle =
+							PhaseColor[phase] || PhaseColor.Default;
+
+						return (
+							<div
+								class={`flex-col relative w-full aspect-9/12 flex  justify-evenly items-center border rounded-lg ${currentStyle.bg} ${currentStyle.border} 
+							
+							`}>
+								<h3
+									class={` ${currentStyle.text} absolute top-2 left-2`}>
+									{key}
+								</h3>
+								<h2
+									class={`text-7xl font-bold ${currentStyle.text} `}>
+									{englishElement?.symbol}
+								</h2>
+								<h3 class='text-sm text-primary'>
+									{englishElement?.atomic_mass}
+								</h3>
+								<h3 class='text-xl font-bold text-foreground'>
+									{value.name}
+								</h3>
+
+								<h3 class='text-primary'>
+									{englishElement?.name}
+								</h3>
+							</div>
+						);
+					})
+				}
+			</section>
+		</article>
+	</main>
+	<footer></footer>
 </Layout>

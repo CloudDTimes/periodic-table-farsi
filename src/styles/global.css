@@ -1,1 +1,48 @@
 @import "tailwindcss";
+
+
+
+@theme {
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-surface: var(--surface);
+    --color-border: var(--border);
+  
+    --color-primary: var(--primary);
+    --color-secondary: var(--secondary);
+    --color-accent: var(--accent);
+    --color-muted: var(--muted);
+  
+    /* New Semantic System Tokens */
+    --color-success: var(--success);
+    --color-destructive: var(--destructive);
+  }
+  
+
+  :root {
+
+    --background: #08001a;
+    /* Page body background canvas */
+    --foreground: #F0E5FF;
+    /* Main text color (H1, text, menu labels) */
+    --surface: #180934;
+    /* Card containers, sidebars, popups, modals */
+    --border: #291452;
+    /* Divider lines, card outlines, input fields */
+  
+    --primary: #B18AFF;
+    /* Core brand color (Main buttons, active links) */
+    --secondary: #25006b;
+    /* Low-priority interactive elements (Cancel buttons) */
+    --muted: #f0e5ffcc;
+    /* Soft secondary text (Dates, captions, hints) */
+  
+  
+    --accent: #ffff00;
+    /* Neon Magenta: "New Feature" tags, general badges */
+    --success: #00ff55;
+    /* Neon Green: Profit arrows, active stats, "Saved" */
+    --destructive: #b30000;
+    /* Neon Red: Delete actions, error states, alerts */
+  }
